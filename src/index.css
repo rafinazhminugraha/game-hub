@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+/* raw values for Dark and Light Mode */
+:root {
+  --theme-base: #ffffff;
+  --theme-surface: #f4f4f5; /* Search bar, dropdowns, secondary backgrounds */
+  --theme-surface-hover: #e4e4e7;
+  --theme-text-main: #18181b; /* Headings, primary text */
+  --theme-text-muted: #71717a; /* Inactive menu items, placeholders */
+  --theme-accent: #22c55e; /* The green toggle switch */
+}
+
+.dark {
+  --theme-base: #121212;
+  --theme-surface: #27272a;
+  --theme-surface-hover: #3f3f46;
+  --theme-text-main: #ffffff;
+  --theme-text-muted: #a1a1aa;
+}
+
+/* mapping to Tailwind v4 utilities */
+@theme {
+  --color-base: var(--theme-base);
+  --color-surface: var(--theme-surface);
+  --color-surface-hover: var(--theme-surface-hover);
+  --color-tx-main: var(--theme-text-main);
+  --color-tx-muted: var(--theme-text-muted);
+  --color-accent: var(--theme-accent);
+}
+
+/* im forcing the body to use the theme */
+body {
+  background-color: var(--theme-base);
+  color: var(--theme-text-main);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
