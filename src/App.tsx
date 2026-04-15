@@ -55,7 +55,7 @@ export default function App() {
   console.log(generalFilter);
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex flex-col gap-8 p-6">
       <NavBar
         onCLickNavbar={handleClickNavbar}
         onChangeQuery={handleQuery}
