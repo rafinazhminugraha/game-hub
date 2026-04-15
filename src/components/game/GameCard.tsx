@@ -5,7 +5,7 @@ export default function GameCard() {
   const link: string =
     "https://media.rawg.io/media/resize/640/-/games/ed6/ed613937e113a4d43fa0db771e527a2f.jpg";
   return (
-    <article className="flex flex-col bg-surface rounded-xl overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer">
+    <article className="flex flex-col bg-surface rounded-xl overflow-hidden transition-all duration-200 hover:bg-surface-hover cursor-pointer">
       <figure>
         <img
           src={link}

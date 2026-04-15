@@ -17,19 +17,17 @@ export default function NavBar({
   const { isDark, toggle } = useTheme();
 
   return (
-    <nav className="flex flex-row justify-between items-center">
-      <figure>
-        <img className="h-12 w-auto" src={logo} alt="Gamehub Logo" />
-      </figure>
+    <nav className="flex flex-row justify-between items-center gap-6">
+      <p className="text-lg md:text-xl xl:text-2xl font-extrabold">GameHub</p>
       <form
-        className="flex flex-row items-center gap-2 rounded-2xl bg-surface p-2 min-w-80 focus-within:bg-surface-hover"
+        className="flex flex-row items-center gap-2 w-2/3 rounded-2xl bg-surface p-2 focus-within:bg-surface-hover"
         onSubmit={onSubmitQuery}
       >
         <CiSearch className="text-3xl" />
         <input
           // value={query}
           onChange={(e) => onChangeQuery(e.target.value)}
-          className="focus:outline-none bg-transparent"
+          className="focus:outline-none bg-transparent w-4/5"
           type="text"
           placeholder="Search"
         />
