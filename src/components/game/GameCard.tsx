@@ -1,45 +1,59 @@
+import type { JSX } from "react";
 import { IoLogoPlaystation, IoLogoWindows, IoLogoXbox } from "react-icons/io";
 import { IoLogoApple } from "react-icons/io5";
 
-export default function GameCard() {
-  const link: string =
-    "https://media.rawg.io/media/resize/640/-/games/ed6/ed613937e113a4d43fa0db771e527a2f.jpg";
+import type { Game } from "../../hooks/useGames";
+
+// Map platform slugs to icons
+const platformIconMap: Record<string, JSX.Element> = {
+  pc: <IoLogoWindows />,
+  playstation: <IoLogoPlaystation />,
+  xbox: <IoLogoXbox />,
+  mac: <IoLogoApple />,
+};
+
+// 6. take the Props from custom hooks, then rendem them (always pay attention the interface that already created)
+interface Props {
+  game: Game;
+}
+
+export default function GameCard({ game }: Props) {
   return (
     <article className="flex flex-col bg-surface rounded-xl overflow-hidden transition-all duration-200 hover:bg-surface-hover cursor-pointer">
-      <figure>
-        <img
-          src={link}
-          alt="Prince of Persia The Sands of Time Remake gameplay scene"
-        />
+      <figure className="w-full aspect-video overflow-hidden">
+        <img className="w-full h-full object-cover" src={game.background_image} alt={game.name} />
       </figure>
       <div className="flex flex-col gap-8 p-4">
         <ul className="flex flex-row gap-1.5" aria-label="Available platforms">
-          <li className="text-2xl">
-            {" "}
-            <IoLogoXbox />{" "}
-          </li>
-          <li className="text-2xl">
-            {" "}
-            <IoLogoWindows />{" "}
-          </li>
-          <li className="text-2xl">
-            {" "}
-            <IoLogoPlaystation />{" "}
-          </li>
-          <li className="text-2xl">
-            {" "}
-            <IoLogoApple />{" "}
-          </li>
+          {/* Render based on the slug then use the component match the slug */}
+          {game.platforms?.map(({ platform }) => {
+            const slug = Object.keys(platformIconMap).find((key) =>
+              platform.slug.startsWith(key),
+            );
+            const icon = slug ? platformIconMap[slug] : null;
+            return icon ? (
+              <li key={platform.id} className="text-2xl">
+                {icon}
+              </li>
+            ) : null;
+          })}
         </ul>
+
         <header>
           <h2 className="text-3xl font-bold">
-            Prince of Persia: The Sands of Time Remake<span>👍</span>
+            {game.name}{" "}
+            <span className="font-semibold text-xl text-tx-muted">
+              | {game.rating}
+            </span>
           </h2>
         </header>
         <footer>
-          <ul className="flex flex-row gap-2">
-            <li className="font-medium text-xl text-tx-muted">Action</li>
-            <li className="font-medium text-xl text-tx-muted">Horror</li>
+          <ul className="flex flex-row gap-2 flex-wrap">
+            {game.genres.map((genre) => (
+              <li key={genre.id} className="font-medium text-lg text-tx-muted">
+                {genre.name}
+              </li>
+            ))}
           </ul>
         </footer>
       </div>
