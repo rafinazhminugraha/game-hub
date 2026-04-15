@@ -23,6 +23,11 @@ export default function App() {
     setIsGenreBarOpen(true);
   };
 
+  // use this when to block the scroll when isGenreOpen === true
+  // useEffect(() => {
+  //   document.body.style.overflow = isGenreBarOpen ? "hidden" : "auto";
+  // }, [isGenreBarOpen]);
+
   // ----------------------------------------------------- Search
 
   const [query, setQuery] = useState("");
@@ -36,48 +41,54 @@ export default function App() {
     setQuery(query);
   };
 
-  useEffect(() => {
-    document.body.style.overflow = isGenreBarOpen ? "hidden" : "auto";
-  }, [isGenreBarOpen]);
-
   // ----------------------------------------------------- Filter
   const [platform, setPlatform] = useState("");
   const [generalFilter, setGeneralFilter] = useState("");
-  
+
   const handleChangePlatform = (platform: string) => {
     setPlatform(platform);
   };
-  console.log(platform);
 
   const handleChangeGeneral = (generalFilter: string) => {
     setGeneralFilter(generalFilter);
   };
-  console.log(generalFilter);
 
+  // ----------------------------------------------------- MAIN JSX
   return (
-    <div className="flex flex-col gap-8 p-6">
+    <div className="flex flex-col gap-8 p-6 xl:p-12 relative">
       <NavBar
         onCLickNavbar={handleClickNavbar}
         onChangeQuery={handleQuery}
         onSubmitQuery={handleSubmit}
       />
-      <Hero />
-      <FilterBar
-        onChangePlatform={handleChangePlatform}
-        onChangeGeneral={handleChangeGeneral}
-      />
-      <GameGrid />
       {isGenreBarOpen && (
-        <>
+        <div className="xl:hidden">
           <div className="fixed inset-0 bg-surface/80 z-40"></div>
-          <div className="fixed inset-0 h-full z-50">
+          <div className="fixed top-3 right-3 h-full z-50">
             <GenreBar
               onCloseGenre={handleOnCloseGenre}
               onClickGenre={handleClickGenre}
             />
           </div>
-        </>
+        </div>
       )}
+      <Hero />
+      <div className="flex flex-row gap-6">
+        <div className="max-xl:hidden">
+          <GenreBar
+            onCloseGenre={handleOnCloseGenre}
+            onClickGenre={handleClickGenre}
+          />
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <FilterBar
+            onChangePlatform={handleChangePlatform}
+            onChangeGeneral={handleChangeGeneral}
+          />
+          <GameGrid />
+        </div>
+      </div>
     </div>
   );
 }
