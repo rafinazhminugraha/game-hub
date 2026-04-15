@@ -35,10 +35,10 @@ export default function NavBar({
         />
       </form>
       <RxHamburgerMenu
-        className="text-3xl cursor-pointer lg:hidden"
+        className="text-3xl cursor-pointer xl:hidden"
         onClick={onCLickNavbar}
       />
-      <button className="cursor-pointer max-lg:hidden bg-surface border-border border p-4 rounded-xl" onClick={toggle}>
+      <button className="cursor-pointer max-xl:hidden bg-surface border-border border p-4 rounded-xl" onClick={toggle}>
         {isDark ? "Dark" : "Light"}
       </button>
     </nav>

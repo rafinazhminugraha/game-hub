@@ -31,6 +31,12 @@
   --color-tx-main: var(--theme-text-main);
   --color-tx-muted: var(--theme-text-muted);
   --color-accent: var(--theme-accent);
+  /* for overide the tailwind breakpoints
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px; */
 }
 
 /* im forcing the body to use the theme */

@@ -28,7 +28,7 @@ export default function GenreBar({ onClickGenre, onCloseGenre }: Props) {
           </li>
         ))}
       </ul>
-      <button className="cursor-pointer lg:hidden bg-surface border-border p-2 border rounded-xl" onClick={toggle}>
+      <button className="cursor-pointer xl:hidden bg-surface border-border p-2 border rounded-xl" onClick={toggle}>
         {isDark ? "Dark" : "Light"}
       </button>
     </aside>
