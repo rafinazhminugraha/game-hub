@@ -1,5 +1,4 @@
 import { RxHamburgerMenu } from "react-icons/rx";
-import logo from "../../assets/gamepad-icon.png";
 import { CiSearch } from "react-icons/ci";
 import { useTheme } from "../../lib/useTheme";
 
@@ -18,7 +17,7 @@ export default function NavBar({
 
   return (
     <nav className="flex flex-row justify-between items-center gap-6">
-      <p className="text-lg md:text-xl xl:text-2xl font-extrabold">GameHub</p>
+      <p className="text-lg md:text-xl xl:text-2xl font-extrabold tracking-widest">GAMEHUB</p>
       <form
         className="flex flex-row items-center gap-2 w-2/3 rounded-2xl bg-surface p-2 focus-within:bg-surface-hover"
         onSubmit={onSubmitQuery}
