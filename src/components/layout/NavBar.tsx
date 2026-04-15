@@ -38,7 +38,10 @@ export default function NavBar({
         className="text-3xl cursor-pointer xl:hidden"
         onClick={onCLickNavbar}
       />
-      <button className="cursor-pointer max-xl:hidden bg-surface border-border border p-4 rounded-xl" onClick={toggle}>
+      <button
+        className="cursor-pointer hover:bg-surface-hover max-xl:hidden bg-surface border-border border p-4 rounded-xl"
+        onClick={toggle}
+      >
         {isDark ? "Dark" : "Light"}
       </button>
     </nav>
