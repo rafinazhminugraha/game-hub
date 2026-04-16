@@ -13,8 +13,6 @@ interface Props {
 export default function GameGrid({ query }: Props) {
   const { games, error, loading } = useGames(query);
 
-  console.log(query);
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
   return (

@@ -44,8 +44,6 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  console.log(genre, platform, sort, search);
-
   useEffect(() => {
     // if (!genre && !platform && !sort && !search) return;
     const controller = new AbortController();
