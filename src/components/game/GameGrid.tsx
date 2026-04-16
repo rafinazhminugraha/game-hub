@@ -1,8 +1,19 @@
 import useGames from "../../hooks/useGames";
 import GameCard from "./GameCard";
 
-export default function GameGrid() {
-  const { games, error, loading } = useGames();
+interface Props {
+  query: {
+    genre: string;
+    platform: string;
+    sort: string;
+    search: string;
+  };
+}
+
+export default function GameGrid({ query }: Props) {
+  const { games, error, loading } = useGames(query);
+
+  console.log(query);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;

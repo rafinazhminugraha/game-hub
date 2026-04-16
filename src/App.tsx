@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import GameGrid from "./components/game/GameGrid";
 import FilterBar from "./components/layout/FilterBar";
 import GenreBar from "./components/layout/GenreBar";
@@ -6,13 +6,20 @@ import NavBar from "./components/layout/NavBar";
 import Hero from "./components/ui/Hero";
 
 export default function App() {
+  // ----------------------------------------------------- Universal Endpoint Query State
+  const [search, setSearch] = useState("");
+  const [query, setQuery] = useState({
+    genre: "",
+    platform: "",
+    sort: "",
+    search: "",
+  });
+
   // ----------------------------------------------------- Genre
-  const [selectedGenre, setSelectedGenre] = useState("");
   const [isGenreBarOpen, setIsGenreBarOpen] = useState(false);
 
-  const handleClickGenre = (item: string) => {
-    setSelectedGenre(item);
-    console.log(selectedGenre);
+  const handleClickGenre = (genre: string) => {
+    setQuery((prev) => ({ ...prev, genre }));
   };
 
   const handleOnCloseGenre = () => {
@@ -30,27 +37,23 @@ export default function App() {
 
   // ----------------------------------------------------- Search
 
-  const [query, setQuery] = useState("");
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(query);
+    setQuery((prev) => ({ ...prev, search: search }));
   };
 
-  const handleQuery = (query: string) => {
-    setQuery(query);
+  const handleQuery = (search: string) => {
+    setSearch(search);
   };
 
   // ----------------------------------------------------- Filter
-  const [platform, setPlatform] = useState("");
-  const [generalFilter, setGeneralFilter] = useState("");
 
   const handleChangePlatform = (platform: string) => {
-    setPlatform(platform);
+    setQuery((prev) => ({ ...prev, platform }));
   };
 
-  const handleChangeGeneral = (generalFilter: string) => {
-    setGeneralFilter(generalFilter);
+  const handleChangeSort = (sort: string) => {
+    setQuery((prev) => ({ ...prev, sort }));
   };
 
   // ----------------------------------------------------- MAIN JSX
@@ -84,9 +87,9 @@ export default function App() {
         <div className="flex flex-col gap-6">
           <FilterBar
             onChangePlatform={handleChangePlatform}
-            onChangeGeneral={handleChangeGeneral}
+            onChangeSort={handleChangeSort}
           />
-          <GameGrid />
+          <GameGrid query={query} />
         </div>
       </div>
     </div>
