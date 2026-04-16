@@ -1,20 +1,36 @@
-
-
-interface Props {
-  customTitle?:string;
-  customDesc?: string;
-  options: string[];
+export interface Option {
   label: string;
-  onChange: (option:string) => void
+  value: string;
 }
 
-export default function Select({ options, label, customTitle, customDesc, onChange}: Props) {
+interface Props {
+  customTitle?: string;
+  customDesc?: string;
+  options: Option[];
+  onChange: (option: string) => void;
+}
+
+export default function Select({
+  options,
+  customTitle,
+  customDesc,
+  onChange,
+}: Props) {
   return (
-    <select className="bg-surface rounded-lg p-3 text-lg cursor-pointer" onChange={(e) => onChange(e.target.value)}>
+    <select
+      className="bg-surface rounded-lg p-3 text-lg cursor-pointer"
+      onChange={(e) => onChange(e.target.value)}
+    >
       {customTitle && <option value="">{customTitle}</option>}
-      {options.map((item, index) => (
-        <option className="cursor-pointer" key={index} value={item} aria-label={label}>
-          {customDesc}{item}
+      {options.map((option, index) => (
+        <option
+          className="cursor-pointer"
+          key={index}
+          value={option.value}
+          aria-label={option.label}
+        >
+          {customDesc}
+          {option.label}
         </option>
       ))}
     </select>
