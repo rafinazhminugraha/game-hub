@@ -30,18 +30,36 @@ interface FetchResponse {
   results: Game[];
 }
 
+export interface GameQuery {
+  genre?: string;
+  platform?: string;
+  sort?: string;
+  search?: string;
+}
+
 // 5. Make the Costum hooks so we can use it anywhere on our app
-const useGames = () => {
-  //usually there's data, error adn loading
+const useGames = ({ genre, platform, sort, search }: GameQuery) => {
+  //usually there's data, error and loading
   const [games, setGames] = useState<Game[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  console.log(genre, platform, sort, search);
+
   useEffect(() => {
+    // if (!genre && !platform && !sort && !search) return;
+    const controller = new AbortController();
     const fetchGame = async () => {
       try {
         setLoading(true);
-        const res = await apiClient.get<FetchResponse>("/games");
+        const res = await apiClient.get<FetchResponse>("/games", {
+          params: {
+            genres: genre || undefined,
+            platforms: platform || undefined,
+            ordering: sort || undefined,
+            search: search || undefined,
+          },
+        });
         setGames(res.data.results);
       } catch (e) {
         if (e instanceof AxiosError) {
@@ -52,7 +70,9 @@ const useGames = () => {
       }
     };
     fetchGame();
-  }, []);
+
+    return () => controller.abort();
+  }, [genre, platform, sort, search]);
 
   return { games, error, loading };
 };
