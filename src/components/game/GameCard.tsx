@@ -1,5 +1,6 @@
 import type { Game } from "../../hooks/useGames";
 import IconList from "./IconList";
+import cropImage from "../../services/crop-image";
 
 // 6. take the Props from custom hooks, then rendem them (always pay attention the interface that already created)
 interface Props {
@@ -12,7 +13,7 @@ export default function GameCard({ game }: Props) {
       <figure className="w-full aspect-video overflow-hidden">
         <img
           className="w-full h-full object-cover"
-          src={game.background_image}
+          src={cropImage(game.background_image)}
           alt={game.name}
         />
       </figure>
