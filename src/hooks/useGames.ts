@@ -33,7 +33,7 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
   //usually there's data, error and loading
   const [games, setGames] = useState<Game[]>([]);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -51,6 +51,7 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
           },
         });
         setGames(res.data.results);
+        setLoading(false)
       } catch (e) {
         if (e instanceof CanceledError) {
           return;
@@ -58,11 +59,15 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
         if (e instanceof AxiosError) {
           setError(e.message);
         }
-      } finally {
-        setLoading(false);
-      }
+      } 
+      // always bug when using finally in strict mode
+      // Use this when production!!
+      // finally {
+      //   setLoading(false)
+      // }
     };
     fetchGame();
+    
     return () => controller.abort();
   }, [genre, platform, sort, search]);
 
