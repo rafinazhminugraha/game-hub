@@ -1,16 +1,5 @@
-import type { JSX } from "react";
-import { IoLogoPlaystation, IoLogoWindows, IoLogoXbox } from "react-icons/io";
-import { IoLogoApple } from "react-icons/io5";
-
 import type { Game } from "../../hooks/useGames";
-
-// Map platform slugs to icons
-const platformIconMap: Record<string, JSX.Element> = {
-  pc: <IoLogoWindows />,
-  playstation: <IoLogoPlaystation />,
-  xbox: <IoLogoXbox />,
-  mac: <IoLogoApple />,
-};
+import IconList from "./IconList";
 
 // 6. take the Props from custom hooks, then rendem them (always pay attention the interface that already created)
 interface Props {
@@ -27,22 +16,10 @@ export default function GameCard({ game }: Props) {
           alt={game.name}
         />
       </figure>
-      <div className="flex flex-col gap-8 p-4">
-        <ul className="flex flex-row gap-1.5" aria-label="Available platforms">
-          {/* Render based on the slug then use the component match the slug */}
-          {game.parent_platforms?.map(({ platform }) => {
-            const slug = Object.keys(platformIconMap).find((key) =>
-              platform.slug.startsWith(key),
-            );
-            const icon = slug ? platformIconMap[slug] : null;
-            return icon ? (
-              <li key={platform.id} className="text-2xl">
-                {icon}
-              </li>
-            ) : null;
-          })}
-        </ul>
-
+      <div className="flex flex-col gap-4 p-4">
+        <IconList
+          Platforms={game.parent_platforms.map((platform) => platform.platform)}
+        />
         <header>
           <h2 className="text-3xl font-bold">
             {game.name}{" "}

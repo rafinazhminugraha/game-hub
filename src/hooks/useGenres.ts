@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
 import { AxiosError } from "axios";
 
-export interface genre {
+export interface Genre {
   id: number;
   name: string; // displayed in the UI
   slug: string; // sent to the API as the filter value
@@ -17,11 +17,11 @@ export interface genre {
 
 interface FetchResponse {
   count: number;
-  results: genre[];
+  results: Genre[];
 }
 
 const useGenres = () => {
-  const [genres, setGenres] = useState<genre[]>([]);
+  const [genres, setGenres] = useState<Genre[]>([]);
 
   useEffect(() => {
     const fetchGenres = async () => {

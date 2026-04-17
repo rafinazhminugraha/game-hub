@@ -1,20 +1,11 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
 import { AxiosError, CanceledError } from "axios";
+import { type Platform } from "./usePlatforms";
+import { type Genre } from "./useGenres";
 
 // 3. Look for the API Doc to see the structer (use postman and hit the endpoint)
 // 4. make the interface to get ony needed data (Destructering)
-export interface Platform {
-  id: number;
-  name: string;
-  slug: string;
-}
-
-export interface Genre {
-  id: number;
-  name: string;
-  slug: string;
-}
 
 export interface Game {
   id: number;
