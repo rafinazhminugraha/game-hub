@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
-import { AxiosError } from "axios";
+import { AxiosError, CanceledError } from "axios";
 
 // 3. Look for the API Doc to see the structer (use postman and hit the endpoint)
 // 4. make the interface to get ony needed data (Destructering)
@@ -45,12 +45,13 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // if (!genre && !platform && !sort && !search) return;
     const controller = new AbortController();
+    // if (!genre && !platform && !sort && !search) return;
     const fetchGame = async () => {
       try {
         setLoading(true);
         const res = await apiClient.get<FetchResponse>("/games", {
+          signal: controller.signal,
           params: {
             genres: genre || undefined,
             platforms: platform || undefined,
@@ -60,6 +61,9 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
         });
         setGames(res.data.results);
       } catch (e) {
+        if (e instanceof CanceledError) {
+          return
+        }
         if (e instanceof AxiosError) {
           setError(e.message);
         }
@@ -68,7 +72,6 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
       }
     };
     fetchGame();
-
     return () => controller.abort();
   }, [genre, platform, sort, search]);
 
