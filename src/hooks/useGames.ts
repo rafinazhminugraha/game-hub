@@ -21,7 +21,7 @@ export interface Game {
   name: string;
   background_image: string;
   rating: number;
-  platforms: { platform: Platform }[];
+  parent_platforms: { platform: Platform }[];
   genres: Genre[];
 }
 
@@ -62,7 +62,7 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
         setGames(res.data.results);
       } catch (e) {
         if (e instanceof CanceledError) {
-          return
+          return;
         }
         if (e instanceof AxiosError) {
           setError(e.message);
