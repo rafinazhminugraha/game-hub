@@ -69,6 +69,7 @@ export default function App() {
           <div className="fixed inset-0 bg-surface/80 z-40"></div>
           <div className="fixed top-3 right-3 h-full z-50">
             <GenreBar
+              selectedGenre={query.genre}
               onCloseGenre={handleOnCloseGenre}
               onClickGenre={handleClickGenre}
             />
@@ -79,6 +80,7 @@ export default function App() {
       <div className="flex flex-row gap-6">
         <div className="max-xl:hidden">
           <GenreBar
+            selectedGenre={query.genre}
             onCloseGenre={handleOnCloseGenre}
             onClickGenre={handleClickGenre}
           />

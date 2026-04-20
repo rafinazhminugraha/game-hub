@@ -5,21 +5,26 @@ import GENRES from "../../hooks/useGenres";
 interface Props {
   onClickGenre: (slug: string) => void;
   onCloseGenre: () => void;
+  selectedGenre: string;
 }
 
-export default function GenreBar({ onClickGenre, onCloseGenre }: Props) {
+export default function GenreBar({
+  onClickGenre,
+  onCloseGenre,
+  selectedGenre,
+}: Props) {
   const { isDark, toggle } = useTheme();
   const { genres } = GENRES();
 
   return (
-    <aside className="w-60 xl:w-80 rounded-3xl bg-base xl:bg-transparent flex flex-col gap-6 py-6">
+    <aside className="w50 xl:w-70 rounded-3xl bg-base xl:bg-transparent flex flex-col gap-6 py-6">
       <header className="flex flex-row items-center justify-between px-6 xl:px-0">
         <p className="text-2xl xl:text-4xl font-bold">Genres</p>
         <IoClose className="text-3xl xl:hidden" onClick={onCloseGenre} />
       </header>
       <ul className="flex flex-col">
         <li
-          className="text-lg xl:text-2xl cursor-pointer hover:text-tx-muted transition-all duration-200 px-6 xl:px-0 py-2 xl:py-6"
+          className="text-lg xl:text-2xl cursor-pointer hover:text-tx-muted transition-all duration-200 px-6 xl:px-0 py-2 xl:py-3"
           value={""}
           onClick={() => onClickGenre("")}
         >
@@ -27,7 +32,7 @@ export default function GenreBar({ onClickGenre, onCloseGenre }: Props) {
         </li>
         {genres.map((genre, index) => (
           <li
-            className="text-lg xl:text-2xl cursor-pointer hover:text-tx-muted transition-all duration-200 px-6 xl:px-0 py-2 xl:py-6"
+            className={`text-lg xl:text-2xl cursor-pointer hover:text-tx-muted ${selectedGenre === genre.slug && `font-extrabold`} transition-all duration-200 px-6 xl:px-0 py-2 xl:py-3`}
             key={index}
             value={genre.name}
             onClick={() => onClickGenre(genre.slug)}
