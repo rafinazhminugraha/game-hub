@@ -16,12 +16,12 @@ export default function NavBar({
   const { isDark, toggle } = useTheme();
 
   return (
-    <nav className="flex max-h-24 flex-wrap items-center  gap-3 overflow-y-auto lg:max-h-none lg:flex-nowrap lg:items-center lg:gap-6 lg:overflow-visible">
+    <nav className="flex max-h-24 flex-wrap items-center justify-between gap-6 overflow-y-auto lg:max-h-none lg:flex-nowrap lg:items-center lg:gap-6 lg:overflow-visible">
       <p className="text-lg md:text-xl lg:text-2xl font-extrabold tracking-widest">
         GAMEHUB
       </p>
       <form
-        className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl bg-surface p-2 focus-within:bg-surface-hover lg:w-2/3"
+        className="flex min-w-0 max-w-md sm:max-w-xl md:max-w-3xl lg:max-w-5xl flex-1 items-center gap-2 rounded-2xl bg-surface p-2 focus-within:bg-surface-hover lg:w-2/3"
         onSubmit={onSubmitQuery}
       >
         <CiSearch className="text-3xl" />
