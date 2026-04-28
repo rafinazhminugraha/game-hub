@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GameGrid from "./components/game/GameGrid";
 import FilterBar from "./components/layout/FilterBar";
 import GenreBar from "./components/layout/GenreBar";
@@ -31,9 +31,9 @@ export default function App() {
   };
 
   // use this when to block the scroll when isGenreOpen === true
-  // useEffect(() => {
-  //   document.body.style.overflow = isGenreBarOpen ? "hidden" : "auto";
-  // }, [isGenreBarOpen]);
+  useEffect(() => {
+    document.body.style.overflow = isGenreBarOpen ? "hidden" : "auto";
+  }, [isGenreBarOpen]);
 
   // ----------------------------------------------------- Search
 
