@@ -1,6 +1,6 @@
 import { IoClose } from "react-icons/io5";
 import { useTheme } from "../../lib/useTheme";
-import GENRES from "../../hooks/useGenres";
+import useGenres from "../../hooks/useGenres";
 import cropImage from "../../services/crop-image";
 
 interface Props {
@@ -15,7 +15,7 @@ export default function GenreBar({
   selectedGenre,
 }: Props) {
   const { isDark, toggle } = useTheme();
-  const { isPending, data: genres = [] } = GENRES();
+  const { isLoading, data: genres = [] } = useGenres();
 
   return (
     <aside className="w50 lg:w-70 rounded-3xl bg-base lg:bg-transparent flex flex-col gap-6 py-6 lg:py-0 ">
@@ -31,12 +31,12 @@ export default function GenreBar({
         >
           All Games
         </li>
-        {isPending ? (
+        {isLoading ? (
           <p>Loading</p>
         ) : (
           genres.map((genre, index) => (
             <li
-              className={`flex text-lg gap-4 items-center lg:text-2xl cursor-pointer hover:text-tx-muted ${selectedGenre === genre.slug && `font-extrabold`} transition-all duration-200 px-6 lg:px-0 py-2 lg:py-3`}
+              className={`flex text-lg gap-4 items-center lg:text-2xl cursor-pointer hover:font-extrabold ${selectedGenre === genre.slug && `font-extrabold`} transition-all duration-100 px-6 lg:px-0 py-2 lg:py-3`}
               key={index}
               value={genre.name}
               onClick={() => onClickGenre(genre.slug)}

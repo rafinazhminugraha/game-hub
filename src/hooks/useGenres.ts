@@ -24,7 +24,7 @@ const useGenres = () => {
   //---------------------------------------------------------------------
   //      USING TANSTACK QUERY (EASY FETCHING CACHING AND EVERYTHING)
   //---------------------------------------------------------------------
-  const { isPending, error, data } = useQuery<Genre[]>({
+  const { isLoading, error, data } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: async ({ signal }) => {
       const response = await apiClient.get<FetchResponse>("/genres", {
@@ -35,7 +35,7 @@ const useGenres = () => {
     },
   });
 
-  return { isPending, error, data };
+  return { isLoading, error, data };
 
   //---------------------------------------------------------------------
   //                  USING NATIVE FETCH FROM JS AND REACT

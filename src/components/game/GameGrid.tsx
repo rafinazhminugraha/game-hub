@@ -12,12 +12,12 @@ interface Props {
 }
 
 export default function GameGrid({ query }: Props) {
-  const { data = [], isPending, error } = useGames(query);
+  const { data = [], isLoading, error } = useGames(query);
 
   if (error) return <p>{error.message}</p>;
   return (
     <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-      {isPending
+      {isLoading
         ? Array.from({ length: 10 }).map((_, index) => (
             <GameCardSkeleton key={index} />
           ))

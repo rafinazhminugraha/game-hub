@@ -32,7 +32,7 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
   //---------------------------------------------------------------------
   //      USING TANSTACK QUERY (EASY FETCHING CACHING AND EVERYTHING)
   //---------------------------------------------------------------------
-  const { isPending, error, data } = useQuery<Game[]>({
+  const { isLoading, error, data } = useQuery<Game[]>({
     queryKey: ["games", genre, platform, sort, search],
     queryFn: async ({ signal }) => {
       const response = await apiClient.get<FetchResponse>("/games", {
@@ -49,7 +49,7 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
     },
   });
 
-  return { isPending, error, data };
+  return { isLoading, error, data };
 
   //---------------------------------------------------------------------
   //                  USING NATIVE FETCH FROM JS AND REACT

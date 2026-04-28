@@ -1,11 +1,11 @@
 import { useState } from "react";
-import GameGrid from "./components/game/GameGrid";
-import FilterBar from "./components/layout/FilterBar";
-import GenreBar from "./components/layout/GenreBar";
-import NavBar from "./components/layout/NavBar";
-import Hero from "./components/ui/Hero";
+import GameGrid from "../components/game/GameGrid";
+import FilterBar from "../components/layout/FilterBar";
+import GenreBar from "../components/layout/GenreBar";
+import NavBar from "../components/layout/NavBar";
+import Hero from "../components/ui/Hero";
 
-export default function App() {
+export default function HomePage() {
   // ----------------------------------------------------- Universal Endpoint Query State
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState({

@@ -1,5 +1,5 @@
 import Select from "../ui/Select";
-import PLATFORMS from "../../hooks/usePlatforms";
+import usePlatforms from "../../hooks/usePlatforms";
 
 interface Props {
   onChangePlatform: (platform: string) => void;
@@ -12,7 +12,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function Filter({ onChangePlatform, onChangeSort }: Props) {
-  const { data:platforms = [] } = PLATFORMS();
+  const { data:platforms = [] } = usePlatforms();
   const platformOption = platforms.map((platform) => ({
     label: platform.name,
     value: String(platform.id),

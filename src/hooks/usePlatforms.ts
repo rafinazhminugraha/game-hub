@@ -16,7 +16,7 @@ const usePlatforms = () => {
   //---------------------------------------------------------------------
   //      USING TANSTACK QUERY (EASY FETCHING CACHING AND EVERYTHING)
   //---------------------------------------------------------------------
-  const { isPending, error, data } = useQuery<Platform[]>({
+  const { isLoading, error, data } = useQuery<Platform[]>({
     queryKey: ["platforms"],
     queryFn: async ({ signal }) => {
       const response = await apiClient.get<FetchResponse>("/platforms", {
@@ -27,7 +27,7 @@ const usePlatforms = () => {
     },
   });
 
-  return { isPending, error, data };
+  return { isLoading, error, data };
 
   //---------------------------------------------------------------------
   //                  USING NATIVE FETCH FROM JS AND REACT
