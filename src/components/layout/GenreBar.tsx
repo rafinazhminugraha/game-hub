@@ -18,7 +18,7 @@ export default function GenreBar({
   const { genres } = GENRES();
 
   return (
-    <aside className="w50 lg:w-70 rounded-3xl bg-base lg:bg-transparent flex flex-col gap-6 py-6">
+    <aside className="w50 lg:w-70 rounded-3xl bg-base lg:bg-transparent flex flex-col gap-6 py-6 lg:py-0 ">
       <header className="flex flex-row items-center justify-between px-6 lg:px-0">
         <p className="text-2xl lg:text-4xl font-bold">Genres</p>
         <IoClose className="text-3xl lg:hidden" onClick={onCloseGenre} />
