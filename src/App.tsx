@@ -118,3 +118,4 @@ export default function App() {
 // │   └── GameHub.tsx        // The "Template/Page" that brings it all together
 // ├── App.tsx                // Entry point & Routing
 // └── index.css              // Tailwind v4 imports & @theme
+

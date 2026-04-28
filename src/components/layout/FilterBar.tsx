@@ -9,9 +9,6 @@ interface Props {
 const SORT_OPTIONS = [
   { label: "Relevance", value: "" },
   { label: "Rating", value: "-rating" },
-  { label: "Metacritic", value: "-metacritic" },
-  { label: "Name A-Z", value: "name" },
-  { label: "Newest", value: "-released" },
 ];
 
 export default function Filter({ onChangePlatform, onChangeSort }: Props) {
