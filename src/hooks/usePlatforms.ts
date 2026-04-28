@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
-import { AxiosError } from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 export interface Platform {
   id: number;
@@ -14,24 +13,40 @@ interface FetchResponse {
 }
 
 const usePlatforms = () => {
-  const [platforms, setPlatforms] = useState<Platform[]>([]);
+  //---------------------------------------------------------------------
+  //      USING TANSTACK QUERY (EASY FETCHING CACHING AND EVERYTHING)
+  //---------------------------------------------------------------------
+  const { isPending, error, data } = useQuery<Platform[]>({
+    queryKey: ["platforms"],
+    queryFn: async ({ signal }) => {
+      const response = await apiClient.get<FetchResponse>("/platforms", {
+        signal,
+      });
 
-  useEffect(() => {
-    const fetchPlatforms = async () => {
-      try {
-        const res = await apiClient.get<FetchResponse>("/platforms");
-        setPlatforms(res.data.results);
-      } catch (e) {
-        if (e instanceof AxiosError) {
-          console.log(e);
-        }
-      }
-    };
+      return response.data.results;
+    },
+  });
 
-    fetchPlatforms();
-  }, []);
+  return { isPending, error, data };
 
-  return { platforms };
+  //---------------------------------------------------------------------
+  //                  USING NATIVE FETCH FROM JS AND REACT
+  //---------------------------------------------------------------------
+  // const [platforms, setPlatforms] = useState<Platform[]>([]);
+  // useEffect(() => {
+  //   const fetchPlatforms = async () => {
+  //     try {
+  //       const res = await apiClient.get<FetchResponse>("/platforms");
+  //       setPlatforms(res.data.results);
+  //     } catch (e) {
+  //       if (e instanceof AxiosError) {
+  //         console.log(e);
+  //       }
+  //     }
+  //   };
+  //   fetchPlatforms();
+  // }, []);
+  // return { platforms };
 };
 
 export default usePlatforms;

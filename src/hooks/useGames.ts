@@ -15,6 +15,11 @@ export interface Game {
   genres: Genre[];
 }
 
+interface FetchResponse {
+  count: number;
+  results: Game[];
+}
+
 export interface GameQuery {
   genre?: string;
   platform?: string;
@@ -27,10 +32,10 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
   //---------------------------------------------------------------------
   //      USING TANSTACK QUERY (EASY FETCHING CACHING AND EVERYTHING)
   //---------------------------------------------------------------------
-  const {isPending, error, data} = useQuery<Game[]>({
+  const { isPending, error, data } = useQuery<Game[]>({
     queryKey: ["games", genre, platform, sort, search],
     queryFn: async ({ signal }) => {
-      const response = await apiClient.get("/games", {
+      const response = await apiClient.get<FetchResponse>("/games", {
         signal,
         params: {
           genres: genre || undefined,
@@ -41,11 +46,10 @@ const useGames = ({ genre, platform, sort, search }: GameQuery) => {
       });
 
       return response.data.results;
-    }
+    },
   });
 
-  return {isPending, error, data};
-
+  return { isPending, error, data };
 
   //---------------------------------------------------------------------
   //                  USING NATIVE FETCH FROM JS AND REACT

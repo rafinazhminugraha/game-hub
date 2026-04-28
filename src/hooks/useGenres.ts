@@ -5,9 +5,8 @@
 // You could also fetch this dynamically from the API (more advanced).
 // For now, a static list is simpler and fast.
 
-import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
-import { AxiosError } from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 export interface Genre {
   id: number;
@@ -22,24 +21,40 @@ interface FetchResponse {
 }
 
 const useGenres = () => {
-  const [genres, setGenres] = useState<Genre[]>([]);
+  //---------------------------------------------------------------------
+  //      USING TANSTACK QUERY (EASY FETCHING CACHING AND EVERYTHING)
+  //---------------------------------------------------------------------
+  const { isPending, error, data } = useQuery<Genre[]>({
+    queryKey: ["genres"],
+    queryFn: async ({ signal }) => {
+      const response = await apiClient.get<FetchResponse>("/genres", {
+        signal,
+      });
 
-  useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const res = await apiClient.get<FetchResponse>("/genres");
-        setGenres(res.data.results);
-      } catch (e) {
-        if (e instanceof AxiosError) {
-          console.log(e.message);
-        }
-      }
-    };
+      return response.data.results;
+    },
+  });
 
-    fetchGenres();
-  }, []);
+  return { isPending, error, data };
 
-  return { genres };
+  //---------------------------------------------------------------------
+  //                  USING NATIVE FETCH FROM JS AND REACT
+  //---------------------------------------------------------------------
+  // const [genres, setGenres] = useState<Genre[]>([]);
+  // useEffect(() => {
+  //   const fetchGenres = async () => {
+  //     try {
+  //       const res = await apiClient.get<FetchResponse>("/genres");
+  //       setGenres(res.data.results);
+  //     } catch (e) {
+  //       if (e instanceof AxiosError) {
+  //         console.log(e.message);
+  //       }
+  //     }
+  //   };
+  //   fetchGenres();
+  // }, []);
+  // return { genres };
 };
 
 export default useGenres;

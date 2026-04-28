@@ -12,7 +12,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function Filter({ onChangePlatform, onChangeSort }: Props) {
-  const { platforms } = PLATFORMS();
+  const { data:platforms = [] } = PLATFORMS();
   const platformOption = platforms.map((platform) => ({
     label: platform.name,
     value: String(platform.id),
