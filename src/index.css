@@ -39,6 +39,13 @@
   --breakpoint-2xl: 1536px; */
 }
 
+/* Reduce all text sizes globally by scaling base font size */
+@layer base {
+  html {
+    font-size: 12px; /* default is 16px, reduces all text ~12.5% */
+  }
+}
+
 /* im forcing the body to use the theme */
 body {
   background-color: var(--theme-base);

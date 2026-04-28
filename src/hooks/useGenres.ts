@@ -13,6 +13,7 @@ export interface Genre {
   id: number;
   name: string; // displayed in the UI
   slug: string; // sent to the API as the filter value
+  image_background: string;
 }
 
 interface FetchResponse {

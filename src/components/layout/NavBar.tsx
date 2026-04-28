@@ -17,7 +17,7 @@ export default function NavBar({
 
   return (
     <nav className="flex flex-row justify-between items-center gap-6">
-      <p className="text-lg md:text-xl xl:text-2xl font-extrabold tracking-widest">GAMEHUB</p>
+      <p className="text-lg md:text-xl lg:text-2xl font-extrabold tracking-widest">GAMEHUB</p>
       <form
         className="flex flex-row items-center gap-2 w-2/3 rounded-2xl bg-surface p-2 focus-within:bg-surface-hover"
         onSubmit={onSubmitQuery}
@@ -32,11 +32,11 @@ export default function NavBar({
         />
       </form>
       <RxHamburgerMenu
-        className="text-3xl cursor-pointer xl:hidden"
+        className="text-3xl cursor-pointer lg:hidden"
         onClick={onCLickNavbar}
       />
       <button
-        className="cursor-pointer hover:bg-surface-hover max-xl:hidden bg-surface border-border border p-4 rounded-xl"
+        className="cursor-pointer hover:bg-surface-hover max-lg:hidden bg-surface border-border border p-4 rounded-xl"
         onClick={toggle}
       >
         {isDark ? "Dark" : "Light"}

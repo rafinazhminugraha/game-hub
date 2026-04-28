@@ -58,14 +58,14 @@ export default function App() {
 
   // ----------------------------------------------------- MAIN JSX
   return (
-    <div className="flex flex-col gap-8 p-6 xl:p-12 relative">
+    <div className="flex flex-col gap-8 p-6 lg:p-12 relative">
       <NavBar
         onCLickNavbar={handleClickNavbar}
         onChangeQuery={handleQuery}
         onSubmitQuery={handleSubmit}
       />
       {isGenreBarOpen && (
-        <div className="xl:hidden">
+        <div className="lg:hidden">
           <div className="fixed inset-0 bg-surface/80 z-40"></div>
           <div className="fixed top-3 right-3 h-full z-50">
             <GenreBar
@@ -78,7 +78,7 @@ export default function App() {
       )}
       <Hero />
       <div className="flex flex-row gap-6">
-        <div className="max-xl:hidden">
+        <div className="max-lg:hidden">
           <GenreBar
             selectedGenre={query.genre}
             onCloseGenre={handleOnCloseGenre}
