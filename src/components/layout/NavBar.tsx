@@ -50,7 +50,7 @@ export default function NavBar() {
 
       {isGameDetailsPage ? (
         <button
-          className="flex items-center gap-2 rounded-2xl bg-surface px-4 py-3 font-medium hover:bg-surface-hover"
+          className="flex items-center gap-2 rounded-2xl bg-surface px-4 py-3 font-medium hover:bg-surface-hover cursor-pointer"
           onClick={() => navigate("/")}
           type="button"
         >
