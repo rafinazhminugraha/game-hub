@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import useGames from "../../hooks/useGames";
 import GameCardSkeleton from "../ui/GameCardSkeleton";
 import GameCard from "./GameCard";
@@ -7,12 +8,19 @@ interface Props {
     genre: string;
     platform: string;
     sort: string;
-    search: string;
+    // search is removed from Props -- GameGrid reads it from the URL directly
   };
 }
 
 export default function GameGrid({ query }: Props) {
-  const { data = [], isLoading, error } = useGames(query);
+  const [searchParams] = useSearchParams();
+
+  // Read search from the URL, which NavBar already writes to.
+  // This means GameGrid stays in sync automatically whenever the URL changes.
+  const search = searchParams.get("search") ?? "";
+
+  // Merge URL search with the rest of the query from props
+  const { data = [], isLoading, error } = useGames({ ...query, search });
 
   if (error) return <p>{error.message}</p>;
   return (
@@ -25,4 +33,3 @@ export default function GameGrid({ query }: Props) {
     </section>
   );
 }
-
