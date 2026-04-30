@@ -56,7 +56,7 @@ export default function NavBar() {
         >
           {/* On details pages, the navbar becomes a route escape hatch. */}
           <IoArrowBack className="text-2xl" />
-          Back to games
+          Home
         </button>
       ) : (
         <form
