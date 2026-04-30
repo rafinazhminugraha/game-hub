@@ -188,13 +188,13 @@ export const GameDetails = () => {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               {game.website && (
                 <a
                   href={game.website}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full text-center py-2 bg-white text-black font-bold rounded-lg hover:bg-white/90 transition-colors"
+                  className="w-full text-center py-4 bg-transparent text-tx-main border border-border font-bold rounded-lg hover:bg-surface-hover transition-colors"
                 >
                   Official Website
                 </a>
@@ -204,7 +204,7 @@ export const GameDetails = () => {
                   href={game.reddit_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full text-center py-2 bg-[#FF4500] text-white font-bold rounded-lg hover:opacity-90 transition-opacity"
+                  className="w-full text-center py-4 bg-[#FF4500] text-white font-bold rounded-lg hover:opacity-90 transition-opacity"
                 >
                   Reddit Community
                 </a>
