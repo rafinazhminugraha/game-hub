@@ -88,7 +88,9 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="flex flex-col gap-6">
+        {/* Critical flow: on desktop, this container grows to fill all available width.
+            GameGrid expands with it, so "No more games" centers within the full grid. */}
+        <div className="flex flex-col gap-6 flex-1">
           <FilterBar
             onChangePlatform={handleChangePlatform}
             onChangeSort={handleChangeSort}
