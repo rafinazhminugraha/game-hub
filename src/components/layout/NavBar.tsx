@@ -78,10 +78,12 @@ export default function NavBar() {
       {/* 3. Click writes true to the store.
               NavBar does not care what happens next.
               HomePage is subscribed to isGenreOpen and will react. */}
-      <RxHamburgerMenu
-        className="text-3xl cursor-pointer lg:hidden"
-        onClick={() => setIsGenreOpen(true)}
-      />
+      {!isGameDetailsPage && (
+        <RxHamburgerMenu
+          className="text-3xl cursor-pointer lg:hidden"
+          onClick={() => setIsGenreOpen(true)}
+        />
+      )}
 
       <button
         className="cursor-pointer hover:bg-surface-hover max-lg:hidden bg-surface border-border border p-4 rounded-xl"
