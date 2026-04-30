@@ -2,6 +2,11 @@ import apiClient from "../services/api-client";
 import { type Platform } from "./usePlatforms";
 import { type Genre } from "./useGenres";
 import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  parseRawgResponse,
+  RawgGamesResponseSchema,
+  type RawgGamesResponse,
+} from "../services/rawg-schemas";
 
 // 3. Look for the API Doc to see the structer (use postman and hit the endpoint)
 // 4. make the interface to get ony needed data (Destructering)
@@ -13,13 +18,6 @@ export interface Game {
   rating: number;
   parent_platforms: { platform: Platform }[];
   genres: Genre[];
-}
-
-// RAWG paginated response includes `next` (URL) and `results`.
-interface FetchResponse {
-  count: number;
-  results: Game[];
-  next?: string | null;
 }
 
 export interface GameQuery {
@@ -46,9 +44,9 @@ const useGames = ({
   const queryKey = ["games", genre, platform, sort, search, pageSize];
 
   const query = useInfiniteQuery<
-    FetchResponse,
+    RawgGamesResponse,
     Error,
-    InfiniteData<FetchResponse, number>,
+    InfiniteData<RawgGamesResponse, number>,
     readonly unknown[],
     number
   >({
@@ -57,7 +55,7 @@ const useGames = ({
     // using the value returned from getNextPageParam below.
     initialPageParam: 1,
     queryFn: async ({ pageParam, signal }) => {
-      const response = await apiClient.get<FetchResponse>("/games", {
+      const response = await apiClient.get("/games", {
         signal,
         params: {
           page: pageParam,
@@ -68,7 +66,7 @@ const useGames = ({
           search: search || undefined,
         },
       });
-      return response.data;
+      return parseRawgResponse(RawgGamesResponseSchema, response.data, "games");
     },
     getNextPageParam: (lastPage) => {
       // lastPage.next is a URL like "...?page=3"

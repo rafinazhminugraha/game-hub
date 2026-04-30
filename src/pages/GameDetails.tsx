@@ -2,44 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import apiClient from "../services/api-client";
 import parse from "html-react-parser";
+import {
+  parseRawgResponse,
+  RawgGameDetailsSchema,
+  type RawgGameDetails,
+} from "../services/rawg-schemas";
 
 type gameParams = {
   id?: string;
 };
-
-export interface Platform {
-  id: number;
-  slug: string;
-  name: string;
-}
-
-export interface GamePlatform {
-  platform: Platform;
-  released_at: string;
-  requirements: {
-    minimum?: string;
-    recommended?: string;
-  };
-}
-
-export interface gameDetails {
-  id: number;
-  slug: string;
-  name: string;
-  name_original: string;
-  description: string; // Note: RAWG returns HTML
-  metacritic: number;
-  released: string;
-  background_image: string;
-  website: string;
-  rating: number;
-  playtime: number;
-  esrb_rating: {
-    name: string;
-  } | null;
-  platforms: GamePlatform[];
-  reddit_url: string;
-}
 
 export const GameDetails = () => {
   const { id } = useParams<gameParams>();
@@ -49,11 +20,15 @@ export const GameDetails = () => {
     isLoading,
     isError,
     error,
-  } = useQuery<gameDetails>({
+  } = useQuery<RawgGameDetails>({
     queryKey: ["game", id],
     queryFn: async ({ signal }) => {
       const response = await apiClient.get(`/games/${id}`, { signal });
-      return response.data;
+      return parseRawgResponse(
+        RawgGameDetailsSchema,
+        response.data,
+        "game details",
+      );
     },
     enabled: !!id,
   });
@@ -122,9 +97,7 @@ export const GameDetails = () => {
         {/* Left Column: Description & Media */}
         <div className="lg:col-span-2 space-y-8">
           <div>
-            <h2 className="text-2xl font-bold mb-4">
-              About
-            </h2>
+            <h2 className="text-2xl font-bold mb-4">About</h2>
             {/* RAWG returns HTML; use dangerouslySetInnerHTML carefully or a library like 'html-react-parser' */}
             <div className="prose prose-invert max-w-none text-tx-muted leading-relaxed" />
             {parse(game.description)}

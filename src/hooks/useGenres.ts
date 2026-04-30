@@ -7,17 +7,16 @@
 
 import apiClient from "../services/api-client";
 import { useQuery } from "@tanstack/react-query";
+import {
+  parseRawgResponse,
+  RawgGenreListResponseSchema,
+} from "../services/rawg-schemas";
 
 export interface Genre {
   id: number;
   name: string; // displayed in the UI
   slug: string; // sent to the API as the filter value
   image_background: string;
-}
-
-interface FetchResponse {
-  count: number;
-  results: Genre[];
 }
 
 const useGenres = () => {
@@ -27,11 +26,17 @@ const useGenres = () => {
   const { isLoading, error, data } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: async ({ signal }) => {
-      const response = await apiClient.get<FetchResponse>("/genres", {
+      const response = await apiClient.get("/genres", {
         signal,
       });
 
-      return response.data.results;
+      const parsed = parseRawgResponse(
+        RawgGenreListResponseSchema,
+        response.data,
+        "genres",
+      );
+
+      return parsed.results as Genre[];
     },
   });
 

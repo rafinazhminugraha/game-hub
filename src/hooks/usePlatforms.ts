@@ -1,15 +1,14 @@
 import apiClient from "../services/api-client";
 import { useQuery } from "@tanstack/react-query";
+import {
+  parseRawgResponse,
+  RawgPlatformListResponseSchema,
+} from "../services/rawg-schemas";
 
 export interface Platform {
   id: number;
   name: string;
   slug: string;
-}
-
-interface FetchResponse {
-  count: number;
-  results: Platform[];
 }
 
 const usePlatforms = () => {
@@ -19,11 +18,17 @@ const usePlatforms = () => {
   const { isLoading, error, data } = useQuery<Platform[]>({
     queryKey: ["platforms"],
     queryFn: async ({ signal }) => {
-      const response = await apiClient.get<FetchResponse>("/platforms", {
+      const response = await apiClient.get("/platforms", {
         signal,
       });
 
-      return response.data.results;
+      const parsed = parseRawgResponse(
+        RawgPlatformListResponseSchema,
+        response.data,
+        "platforms",
+      );
+
+      return parsed.results as Platform[];
     },
   });
 
