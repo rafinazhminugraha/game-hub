@@ -6,7 +6,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { CiSearch } from "react-icons/ci";
 import { IoArrowBack } from "react-icons/io5";
 import { useTheme } from "../../lib/useTheme";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useUiStore } from "../../lib/useUiStore";
 
@@ -29,18 +29,19 @@ export default function NavBar() {
 
   const isGameDetailsPage = location.pathname.startsWith("/games/");
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // 2. Search is managed via URL params, not Zustand.
-    //    URL params are the right tool here because search state
-    //    should survive a page refresh and be shareable via URL.
-    const params = new URLSearchParams(
-      Object.fromEntries(searchParams.entries()),
-    );
-    if (value) params.set("search", value);
-    else params.delete("search");
-    setSearchParams(params);
-  };
+  // Debounce search: trigger submission 500ms after user stops typing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(
+        Object.fromEntries(searchParams.entries()),
+      );
+      if (value) params.set("search", value);
+      else params.delete("search");
+      setSearchParams(params);
+    }, 500); // 500ms debounce delay
+
+    return () => clearTimeout(timer);
+  }, [value, searchParams, setSearchParams]);
 
   return (
     <nav className="flex max-h-24 flex-wrap items-center justify-between gap-6 overflow-y-auto lg:max-h-none lg:flex-nowrap lg:items-center lg:gap-6 lg:overflow-visible">
@@ -59,11 +60,8 @@ export default function NavBar() {
           Home
         </button>
       ) : (
-        <form
-          className="flex min-w-0 max-w-md sm:max-w-xl md:max-w-3xl lg:max-w-5xl flex-1 items-center gap-2 rounded-2xl bg-surface p-2 focus-within:bg-surface-hover lg:w-2/3"
-          onSubmit={onSubmit}
-        >
-          {/* On the home route, the search bar writes to the URL so the list can react. */}
+        <div className="flex min-w-0 max-w-md sm:max-w-xl md:max-w-3xl lg:max-w-5xl flex-1 items-center gap-2 rounded-2xl bg-surface p-2 focus-within:bg-surface-hover lg:w-2/3">
+          {/* On the home route, search updates automatically via debounce (500ms after typing stops). */}
           <CiSearch className="text-3xl" />
           <input
             value={value}
@@ -72,7 +70,7 @@ export default function NavBar() {
             type="text"
             placeholder="Search"
           />
-        </form>
+        </div>
       )}
 
       {/* 3. Click writes true to the store.
