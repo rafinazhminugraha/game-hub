@@ -15,7 +15,8 @@ export const RawgGenreSchema = z.object({
   id: z.number(),
   name: z.string(),
   slug: z.string(),
-  image_background: stringOrEmpty,
+  // RAWG search payload may omit image_background in nested genres.
+  image_background: stringOrEmpty.optional().default(""),
 });
 
 export const RawgGameSchema = z.object({
@@ -23,12 +24,17 @@ export const RawgGameSchema = z.object({
   name: z.string(),
   background_image: stringOrEmpty,
   rating: z.number(),
-  parent_platforms: z.array(
-    z.object({
-      platform: RawgPlatformSchema,
-    }),
-  ),
-  genres: z.array(RawgGenreSchema),
+  // RAWG search payload may omit parent_platforms for some items.
+  parent_platforms: z
+    .array(
+      z.object({
+        platform: RawgPlatformSchema,
+      }),
+    )
+    .optional()
+    .default([]),
+  // Some search results can omit genres entirely.
+  genres: z.array(RawgGenreSchema).optional().default([]),
 });
 
 export const RawgGamesResponseSchema = z.object({
