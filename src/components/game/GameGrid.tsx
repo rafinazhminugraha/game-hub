@@ -1,3 +1,8 @@
+/**
+ * Component for rendering a grid of games with infinite scroll pagination.
+ * Uses IntersectionObserver to trigger loading more games as the user scrolls.
+ */
+
 import { useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import useGames from "../../hooks/useGames";
@@ -15,12 +20,9 @@ interface Props {
 export default function GameGrid({ query }: Props) {
   const [searchParams] = useSearchParams();
 
-  // Read search from the URL, which NavBar already writes to.
-  // This means GameGrid stays in sync automatically whenever the URL changes.
+  // URL search parameter synchronization
   const search = searchParams.get("search") ?? "";
 
-  // Merge URL search with the rest of the query from props.
-  // The hook returns paginated data, so the list below can keep growing.
   const {
     data,
     isLoading,
@@ -30,33 +32,30 @@ export default function GameGrid({ query }: Props) {
     isFetchingNextPage,
   } = useGames({ ...query, search, pageSize: 20 });
 
-  // Flatten pages into a single render list.
-  // `data.pages` is the full pagination history: page 1, page 2, and so on.
+  // Flatten paginated data into a single list
   const games = data?.pages.flatMap((p) => p.results) ?? [];
 
-  // This invisible element is the trigger point for the next request.
-  // When the user scrolls near it, we fetch the next page automatically.
+  // Ref for the sentinel element used to trigger infinite scroll
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const handleIntersect: IntersectionObserverCallback = useCallback(
     (entries) => {
       const first = entries[0];
       if (first.isIntersecting && hasNextPage && !isFetchingNextPage) {
-        // Critical flow: tell React Query to request the next page.
-        // React Query uses getNextPageParam() from useGames() to know which page comes next.
         fetchNextPage();
       }
     },
     [fetchNextPage, hasNextPage, isFetchingNextPage],
   );
 
+  // Set up intersection observer for infinite scrolling
   useEffect(() => {
     const node = sentinelRef.current;
     if (!node) return;
 
     const observer = new IntersectionObserver(handleIntersect, {
       root: null,
-      rootMargin: "400px", // prefetch before user reaches the bottom
+      rootMargin: "400px",
       threshold: 0.1,
     });
     observer.observe(node);
@@ -79,11 +78,10 @@ export default function GameGrid({ query }: Props) {
           games.map((item) => <GameCard key={item.id} game={item} />)}
       </section>
 
-      {/* Sentinel element observed by IntersectionObserver.
-          When it becomes visible we call fetchNextPage() above. */}
+      {/* Infinite scroll sentinel */}
       <div ref={sentinelRef} />
 
-      {/* Fallback controls for accessibility / manual load */}
+      {/* Pagination controls */}
       <div className="flex justify-center mt-6">
         {isFetchingNextPage ? (
           <button className="btn" disabled>
@@ -104,3 +102,4 @@ export default function GameGrid({ query }: Props) {
     </>
   );
 }
+

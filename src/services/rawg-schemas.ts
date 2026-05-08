@@ -1,3 +1,8 @@
+/**
+ * Zod schemas for validating and transforming RAWG API responses.
+ * Provides type safety and normalization for sparse data payloads.
+ */
+
 import { z } from "zod";
 
 const stringOrEmpty = z
@@ -15,7 +20,7 @@ export const RawgGenreSchema = z.object({
   id: z.number(),
   name: z.string(),
   slug: z.string(),
-  // RAWG search payload may omit image_background in nested genres.
+  // Normalizes potentially missing image backgrounds in search results
   image_background: stringOrEmpty.optional().default(""),
 });
 
@@ -24,7 +29,7 @@ export const RawgGameSchema = z.object({
   name: z.string(),
   background_image: stringOrEmpty,
   rating: z.number(),
-  // RAWG search payload may omit parent_platforms for some items.
+  // Normalizes potentially missing platform or genre data
   parent_platforms: z
     .array(
       z.object({
@@ -33,7 +38,6 @@ export const RawgGameSchema = z.object({
     )
     .optional()
     .default([]),
-  // Some search results can omit genres entirely.
   genres: z.array(RawgGenreSchema).optional().default([]),
 });
 
@@ -87,10 +91,17 @@ export const RawgGameDetailsSchema = z.object({
 });
 
 export type RawgGamesResponse = z.infer<typeof RawgGamesResponseSchema>;
+export type RawgGame = z.infer<typeof RawgGameSchema>;
 export type RawgGenre = z.infer<typeof RawgGenreSchema>;
 export type RawgPlatform = z.infer<typeof RawgPlatformSchema>;
 export type RawgGameDetails = z.infer<typeof RawgGameDetailsSchema>;
 
+/**
+ * Validates data against a Zod schema and throws a formatted error on failure.
+ * @param schema - The Zod schema to validate against.
+ * @param data - The raw data to validate.
+ * @param label - Label for error reporting.
+ */
 export function parseRawgResponse<T>(
   schema: z.ZodType<T>,
   data: unknown,
@@ -108,3 +119,4 @@ export function parseRawgResponse<T>(
 
   return result.data;
 }
+

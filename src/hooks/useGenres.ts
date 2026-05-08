@@ -1,9 +1,7 @@
-// Same idea as platforms -- RAWG accepts genre by slug string for /games?genres=
-// Slugs are lowercase-hyphenated identifiers from the API.
-//
-// Source: https://api.rawg.io/api/genres?key=YOUR_KEY
-// You could also fetch this dynamically from the API (more advanced).
-// For now, a static list is simpler and fast.
+/**
+ * Custom hook for fetching genres from the RAWG API.
+ * Uses TanStack Query for caching and state management.
+ */
 
 import apiClient from "../services/api-client";
 import { useQuery } from "@tanstack/react-query";
@@ -14,16 +12,17 @@ import {
 
 export interface Genre {
   id: number;
-  name: string; // displayed in the UI
-  slug: string; // sent to the API as the filter value
+  name: string;
+  slug: string;
   image_background: string;
 }
 
+/**
+ * Fetches the list of available game genres.
+ * @returns A query object containing genre data, loading state, and errors.
+ */
 const useGenres = () => {
-  //---------------------------------------------------------------------
-  //      USING TANSTACK QUERY (EASY FETCHING CACHING AND EVERYTHING)
-  //---------------------------------------------------------------------
-  const { isLoading, error, data } = useQuery<Genre[]>({
+  return useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: async ({ signal }) => {
       const response = await apiClient.get("/genres", {
@@ -38,28 +37,8 @@ const useGenres = () => {
 
       return parsed.results as Genre[];
     },
+    staleTime: 1000 * 60 * 60 * 24, // Genres change rarely, cache for 24 hours
   });
-
-  return { isLoading, error, data };
-
-  //---------------------------------------------------------------------
-  //                  USING NATIVE FETCH FROM JS AND REACT
-  //---------------------------------------------------------------------
-  // const [genres, setGenres] = useState<Genre[]>([]);
-  // useEffect(() => {
-  //   const fetchGenres = async () => {
-  //     try {
-  //       const res = await apiClient.get<FetchResponse>("/genres");
-  //       setGenres(res.data.results);
-  //     } catch (e) {
-  //       if (e instanceof AxiosError) {
-  //         console.log(e.message);
-  //       }
-  //     }
-  //   };
-  //   fetchGenres();
-  // }, []);
-  // return { genres };
 };
 
 export default useGenres;

@@ -11,7 +11,7 @@ class MockIntersectionObserver {
 if (!globalThis.IntersectionObserver) {
   // GameGrid uses IntersectionObserver for infinite scrolling.
   globalThis.IntersectionObserver =
-    MockIntersectionObserver as typeof IntersectionObserver;
+    MockIntersectionObserver as unknown as typeof IntersectionObserver;
 }
 
 afterEach(() => {

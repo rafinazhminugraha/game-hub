@@ -1,34 +1,33 @@
+/**
+ * Custom hook for fetching games from the RAWG API.
+ * Implements infinite scroll pagination using TanStack Query.
+ */
+
 import apiClient from "../services/api-client";
-import { type Platform } from "./usePlatforms";
-import { type Genre } from "./useGenres";
 import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import {
   parseRawgResponse,
   RawgGamesResponseSchema,
   type RawgGamesResponse,
+  type RawgGame,
 } from "../services/rawg-schemas";
 
-// 3. Look for the API Doc to see the structer (use postman and hit the endpoint)
-// 4. make the interface to get ony needed data (Destructering)
+export type Game = RawgGame;
 
-export interface Game {
-  id: number;
-  name: string;
-  background_image: string;
-  rating: number;
-  parent_platforms: { platform: Platform }[];
-  genres: Genre[];
-}
 
 export interface GameQuery {
   genre?: string;
   platform?: string;
   sort?: string;
   search?: string;
-  pageSize?: number; // optional page size override
+  pageSize?: number;
 }
 
-// 5. Make the Costum hooks so we can use it anywhere on our app
+/**
+ * Fetches a paginated list of games based on the provided query filters.
+ * @param query - Object containing filters like genre, platform, sort, and search.
+ * @returns An infinite query object containing game data and pagination controls.
+ */
 const useGames = ({
   genre,
   platform,
@@ -36,14 +35,9 @@ const useGames = ({
   search,
   pageSize = 20,
 }: GameQuery) => {
-  //---------------------------------------------------------------------
-  //      USING TANSTACK QUERY (useInfiniteQuery for pagination)
-  //---------------------------------------------------------------------
-  // Note: include all filter params into the query key so React Query
-  // resets/fetches fresh data when any filter changes.
   const queryKey = ["games", genre, platform, sort, search, pageSize];
 
-  const query = useInfiniteQuery<
+  return useInfiniteQuery<
     RawgGamesResponse,
     Error,
     InfiniteData<RawgGamesResponse, number>,
@@ -51,8 +45,6 @@ const useGames = ({
     number
   >({
     queryKey,
-    // Important: page 1 is the first request, then React Query increments
-    // using the value returned from getNextPageParam below.
     initialPageParam: 1,
     queryFn: async ({ pageParam, signal }) => {
       const response = await apiClient.get("/games", {
@@ -69,7 +61,6 @@ const useGames = ({
       return parseRawgResponse(RawgGamesResponseSchema, response.data, "games");
     },
     getNextPageParam: (lastPage) => {
-      // lastPage.next is a URL like "...?page=3"
       if (!lastPage?.next) return undefined;
       try {
         const url = new URL(lastPage.next);
@@ -79,78 +70,9 @@ const useGames = ({
         return undefined;
       }
     },
-    // Optional defaults — you can tune these in src/lib/queryClient instead
-    staleTime: 1000 * 60 * 2,
+    staleTime: 1000 * 60 * 5, // 5 minutes cache stale time
     retry: 1,
   });
-
-  // Expose the infinite-query surface:
-  // - data.pages contains every fetched RAWG page
-  // - isLoading / error remain
-  // - fetchNextPage / hasNextPage etc.
-  return query;
-
-  //---------------------------------------------------------------------
-  //      USING TANSTACK QUERY (EASY FETCHING CACHING AND EVERYTHING)
-  //---------------------------------------------------------------------
-  // const { isLoading, error, data } = useQuery<Game[]>({
-  //   queryKey: ["games", genre, platform, sort, search],
-  //   queryFn: async ({ signal }) => {
-  //     const response = await apiClient.get<FetchResponse>("/games", {
-  //       signal,
-  //       params: {
-  //         genres: genre || undefined,
-  //         platforms: platform || undefined,
-  //         ordering: sort || undefined,
-  //         search: search || undefined,
-  //       },
-  //     });
-  //     return response.data.results;
-  //   },
-  // });
-  // return { isLoading, error, data };
-  //---------------------------------------------------------------------
-  //                  USING NATIVE FETCH FROM JS AND REACT
-  //---------------------------------------------------------------------
-  // //usually there's data, error and loading
-  // const [games, setGames] = useState<Game[]>([]);
-  // const [error, setError] = useState("");
-  // const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   const controller = new AbortController();
-  //   // if (!genre && !platform && !sort && !search) return;
-  //   const fetchGame = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const res = await apiClient.get<FetchResponse>("/games", {
-  //         signal: controller.signal,
-  //         params: {
-  //           genres: genre || undefined,
-  //           platforms: platform || undefined,
-  //           ordering: sort || undefined,
-  //           search: search || undefined,
-  //         },
-  //       });
-  //       setGames(res.data.results);
-  //       setLoading(false)
-  //     } catch (e) {
-  //       if (e instanceof CanceledError) {
-  //         return;
-  //       }
-  //       if (e instanceof AxiosError) {
-  //         setError(e.message);
-  //       }
-  //     }
-  //     // always bug when using finally in strict mode
-  //     // Use this when production!!
-  //     // finally {
-  //     //   setLoading(false)
-  //     // }
-  //   };
-  //   fetchGame();
-  //   return () => controller.abort();
-  // }, [genre, platform, sort, search]);
-  // return { games, error, loading };
 };
 
 export default useGames;

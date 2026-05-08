@@ -1,3 +1,8 @@
+/**
+ * Custom hook for fetching gaming platforms from the RAWG API.
+ * Uses TanStack Query for caching and state management.
+ */
+
 import apiClient from "../services/api-client";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -11,11 +16,12 @@ export interface Platform {
   slug: string;
 }
 
+/**
+ * Fetches the list of available gaming platforms.
+ * @returns A query object containing platform data, loading state, and errors.
+ */
 const usePlatforms = () => {
-  //---------------------------------------------------------------------
-  //      USING TANSTACK QUERY (EASY FETCHING CACHING AND EVERYTHING)
-  //---------------------------------------------------------------------
-  const { isLoading, error, data } = useQuery<Platform[]>({
+  return useQuery<Platform[]>({
     queryKey: ["platforms"],
     queryFn: async ({ signal }) => {
       const response = await apiClient.get("/platforms", {
@@ -30,28 +36,8 @@ const usePlatforms = () => {
 
       return parsed.results as Platform[];
     },
+    staleTime: 1000 * 60 * 60 * 24, // Platforms change rarely, cache for 24 hours
   });
-
-  return { isLoading, error, data };
-
-  //---------------------------------------------------------------------
-  //                  USING NATIVE FETCH FROM JS AND REACT
-  //---------------------------------------------------------------------
-  // const [platforms, setPlatforms] = useState<Platform[]>([]);
-  // useEffect(() => {
-  //   const fetchPlatforms = async () => {
-  //     try {
-  //       const res = await apiClient.get<FetchResponse>("/platforms");
-  //       setPlatforms(res.data.results);
-  //     } catch (e) {
-  //       if (e instanceof AxiosError) {
-  //         console.log(e);
-  //       }
-  //     }
-  //   };
-  //   fetchPlatforms();
-  // }, []);
-  // return { platforms };
 };
 
 export default usePlatforms;

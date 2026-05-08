@@ -1,3 +1,8 @@
+/**
+ * Page component for displaying rich information about a specific game.
+ * Fetches data using TanStack Query and parses HTML descriptions.
+ */
+
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import apiClient from "../services/api-client";
@@ -92,13 +97,12 @@ export const GameDetails = () => {
         </div>
       </header>
 
-      {/* Main Grid */}
+      {/* Main Content Grid */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Left Column: Description & Media */}
+        {/* Description & Requirements */}
         <div className="lg:col-span-2 space-y-8">
           <div>
             <h2 className="text-2xl font-bold mb-4">About</h2>
-            {/* RAWG returns HTML; use dangerouslySetInnerHTML carefully or a library like 'html-react-parser' */}
             <div className="prose prose-invert max-w-none text-tx-muted leading-relaxed" />
             {parse(game.description)}
           </div>
@@ -127,7 +131,7 @@ export const GameDetails = () => {
           )}
         </div>
 
-        {/* Right Column: Metadata Sidebar */}
+        {/* Metadata Sidebar */}
         <aside className="space-y-6">
           <div className="bg-surface rounded-2xl p-6 border border-white/5 space-y-6">
             <div className="grid grid-cols-2 gap-4">
@@ -189,3 +193,4 @@ export const GameDetails = () => {
     </div>
   );
 };
+

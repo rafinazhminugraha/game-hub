@@ -1,11 +1,16 @@
-// 2. intall axios and setup the apiClient
+/**
+ * Axios instance configured for the RAWG API.
+ * Includes the base URL and API key from environment variables.
+ */
+
 import axios, { CanceledError } from "axios";
 
-export default axios.create({
+const apiClient = axios.create({
   baseURL: "https://api.rawg.io/api",
   params: {
     key: import.meta.env.VITE_RAWG_API_KEY,
   },
 });
 
-export { CanceledError };
+export default apiClient;
+export { CanceledError };

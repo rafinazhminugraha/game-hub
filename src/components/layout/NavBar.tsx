@@ -1,6 +1,7 @@
-// ROLE: Reads from the Zustand store to trigger the genre sidebar.
-//       Shows the search field on the home route and a back button on game details.
-//       No props needed from any parent because the current route decides the UI.
+/**
+ * Navigation bar component providing search functionality, 
+ * theme toggling, and mobile sidebar controls.
+ */
 
 import { RxHamburgerMenu } from "react-icons/rx";
 import { CiSearch } from "react-icons/ci";
@@ -16,20 +17,16 @@ export default function NavBar() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // 1. Subscribe to only the action we need from the store.
-  //    This component does NOT read isGenreOpen -- it only writes it.
-  //    So NavBar will NOT re-render when isGenreOpen changes.
-  //    That is intentional and correct.
+  // Action to control the mobile genre sidebar
   const setIsGenreOpen = useUiStore((s) => s.setIsGenreOpen);
 
-  // The URL is the source of truth for search on submit.
-  // The input keeps a local draft so typing does not rewrite the URL on every keypress.
+  // Local state for search input to allow smooth typing before updating URL
   const initial = searchParams.get("search") ?? "";
   const [value, setValue] = useState(initial);
 
   const isGameDetailsPage = location.pathname.startsWith("/games/");
 
-  // Debounce search: trigger submission 500ms after user stops typing
+  // Sync search input with URL search parameters using debounce
   useEffect(() => {
     const timer = setTimeout(() => {
       const params = new URLSearchParams(
@@ -38,7 +35,7 @@ export default function NavBar() {
       if (value) params.set("search", value);
       else params.delete("search");
       setSearchParams(params);
-    }, 500); // 500ms debounce delay
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [value, searchParams, setSearchParams]);
@@ -46,7 +43,7 @@ export default function NavBar() {
   return (
     <nav className="flex max-h-24 flex-wrap items-center justify-between gap-6 overflow-y-auto lg:max-h-none lg:flex-nowrap lg:items-center lg:gap-6 lg:overflow-visible">
       <p className="text-lg md:text-xl lg:text-2xl font-extrabold tracking-widest">
-        GAMEHUB
+        GAMICUS
       </p>
 
       {isGameDetailsPage ? (
@@ -55,13 +52,11 @@ export default function NavBar() {
           onClick={() => navigate("/")}
           type="button"
         >
-          {/* On details pages, the navbar becomes a route escape hatch. */}
           <IoArrowBack className="text-2xl" />
           Home
         </button>
       ) : (
         <div className="flex min-w-0 max-w-md sm:max-w-xl md:max-w-3xl lg:max-w-5xl flex-1 items-center gap-2 rounded-2xl bg-surface p-2 focus-within:bg-surface-hover lg:w-2/3">
-          {/* On the home route, search updates automatically via debounce (500ms after typing stops). */}
           <CiSearch className="text-3xl" />
           <input
             value={value}
@@ -73,9 +68,6 @@ export default function NavBar() {
         </div>
       )}
 
-      {/* 3. Click writes true to the store.
-              NavBar does not care what happens next.
-              HomePage is subscribed to isGenreOpen and will react. */}
       {!isGameDetailsPage && (
         <RxHamburgerMenu
           className="text-3xl cursor-pointer lg:hidden"
@@ -92,3 +84,4 @@ export default function NavBar() {
     </nav>
   );
 }
+
